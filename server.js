@@ -76,7 +76,7 @@ app.route('/:date').get(function(req, res) {
     res.json({natural:date, unix:getUnixTimeStamp(date)});
   }
   else {
-    res.json({});
+    res.json({natural: null, unix: null});
   }
 });
 

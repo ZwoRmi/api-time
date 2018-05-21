@@ -41,17 +41,22 @@ app.route('/')
 		  res.sendFile(process.cwd() + '/views/index.html');
     })
 
+function isNormalInteger(str) {
+    return /^\+?\d+$/.test(str);
+}
+
 function isUnixTimeStamp(possibleTimeStamp) {
-  return (new Date(possibleTimeStamp)).getTime() > 0;
+  
+  return isNormalInteger(possibleTimeStamp) && (new Date(parseInt(possibleTimeStamp)*1000)).getTime() > 0;
 }
 
 function getNaturalDate(timeStamp) {
-  var date = new Date(timeStamp);
-  return monthNames[date.getMonth] + ' ' + date.getDate() + date.getFullYear();
+  var date = new Date(parseInt(timeStamp)*1000);
+  return monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
 }
 
 function isNaturalDate(possibleNaturalDate) {
-  return /\w+ \d+, \d+/.match(possibleNaturalDate);
+  return /\w+ \d+, \d+/.test(possibleNaturalDate);
 }
 
 function getUnixTimeStamp(naturalDate) {
@@ -59,6 +64,7 @@ function getUnixTimeStamp(naturalDate) {
   var month = monthNames.indexOf(splittedDate[0]);
   
   var date = new Date(splittedDate[2], month, splittedDate[1]);
+  return date.getTime() / 1000;
 }
 
 app.route('/:date').get(function(req, res) {
